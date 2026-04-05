@@ -18,9 +18,8 @@ const ALL_PRODUCTS = {
   'p3_60': { id: 'p3_60', name: 'Cordyceps Capsules', price: 1000, unit: '60 caps', image: '💊' },
   'p3_90': { id: 'p3_90', name: 'Cordyceps Capsules', price: 1500, unit: '90 caps', image: '💊' },
 
-  'p4_100': { id: 'p4_100', name: 'Cordyceps Tea Blend', price: 600, unit: '100g', image: '🍵' },
-  'p4_250': { id: 'p4_250', name: 'Cordyceps Tea Blend', price: 1500, unit: '250g', image: '🍵' },
-  'p4_500': { id: 'p4_500', name: 'Cordyceps Tea Blend', price: 3000, unit: '500g', image: '🍵' },
+  'p4_1': { id: 'p4_1', name: 'Cordyceps Tea Blend', price: 30, unit: '1 Sachet (3g)', image: '🍵' },
+  'p4_10': { id: 'p4_10', name: 'Cordyceps Tea Blend', price: 300, unit: '1 Packet (10 Sachets)', image: '🍵' },
 };
 
 export default function Cart() {

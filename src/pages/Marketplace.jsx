@@ -13,6 +13,13 @@ const PRODUCTS = [
       { vkey: 'p1_250', size: '250g (1/4 kg)', price: 15000 },
       { vkey: 'p1_500', size: '500g (1/2 kg)', price: 30000 },
       { vkey: 'p1_1000', size: '1kg', price: 60000 }
+    ],
+    descExtra: [
+      "🍄 Core: 100% Pure Cordyceps militaris fruiting bodies",
+      "✨ Quality: Premium grade, hand-harvested",
+      "🔬 Potency: High Cordycepin & Adenosine levels",
+      "🍵 Usage: Ideal for traditional steeping or soups",
+      "📦 Storage: Keep dry for extensive commercial shelf-life"
     ]
   },
   { key: 'p2', emoji: '🫙', badge: 'Popular', rating: 4.6,
@@ -37,15 +44,22 @@ const PRODUCTS = [
       { vkey: 'p3_30', size: '30 capsules', price: 500 },
       { vkey: 'p3_60', size: '60 capsules', price: 1000 },
       { vkey: 'p3_90', size: '90 capsules', price: 1500 }
+    ],
+    descExtra: [
+      "💊 Core: Highly concentrated Cordyceps extract",
+      "🌱 Shell: 100% vegetarian / vegan capsule shells",
+      "⚡ Benefit: Fast absorption for immediate stamina",
+      "🎒 Convenience: Perfect for travel, gym, or the office",
+      "📅 Routine: Easy 1-to-1 substitute for standard daily dosing"
     ]
   },
   { key: 'p4', emoji: '🍵', badge: 'New', rating: 4.5,
     variants: [
-      { vkey: 'p4_100', size: '100g', price: 600 },
-      { vkey: 'p4_250', size: '250g', price: 1500 },
-      { vkey: 'p4_500', size: '500g', price: 3000 }
+      { vkey: 'p4_1', size: '1 Sachet (3g)', price: 30 },
+      { vkey: 'p4_10', size: '1 Packet (10 Sachets)', price: 300 }
     ],
     descExtra: [
+      "📦 Size Info: 1 Sachet = 3g | 1 Packet = 10 Sachets",
       "1. Core: Dried Cordyceps militaris",
       "2. Flavor Add-ons:",
       "• Ginger: warmth & digestion",
@@ -71,7 +85,7 @@ export default function Marketplace() {
     p1: 'p1_250',
     p2: 'p2_100',
     p3: 'p3_30',
-    p4: 'p4_100'
+    p4: 'p4_10'
   });
   const [age, setAge] = useState('');
   const [weight, setWeight] = useState('');

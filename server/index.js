@@ -24,6 +24,20 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
+// Franchise Application Schema
+const franchiseApplicationSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: String, required: true },
+  city: { type: String, required: true },
+  budget: { type: String, required: true },
+  experience: { type: String, default: '' },
+  status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+  submittedAt: { type: Date, default: Date.now },
+});
+
+const FranchiseApplication = mongoose.model('FranchiseApplication', franchiseApplicationSchema);
+
 // Auth Middleware
 const auth = (req, res, next) => {
   try {
@@ -97,6 +111,58 @@ app.get('/api/auth/me', auth, async (req, res) => {
     res.json(user);
   } catch {
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Submit Franchise Application
+app.post('/api/franchise/apply', async (req, res) => {
+  try {
+    const { name, email, phone, city, budget, experience } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !phone || !city || !budget) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    // Create new application
+    const application = new FranchiseApplication({
+      name,
+      email,
+      phone,
+      city,
+      budget,
+      experience
+    });
+
+    await application.save();
+
+    console.log('📧 New Franchise Application:', {
+      name,
+      email,
+      phone,
+      city,
+      budget,
+      submittedAt: new Date().toLocaleString()
+    });
+
+    res.status(201).json({
+      success: true,
+      message: '✅ Application submitted successfully! We will contact you at ' + email,
+      applicationId: application._id
+    });
+  } catch (err) {
+    console.error('❌ Error saving application:', err);
+    res.status(500).json({ message: 'Error saving application', error: err.message });
+  }
+});
+
+// Get Franchise Applications (admin)
+app.get('/api/franchise/applications', async (req, res) => {
+  try {
+    const applications = await FranchiseApplication.find().sort({ submittedAt: -1 });
+    res.json(applications);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching applications', error: err.message });
   }
 });
 
