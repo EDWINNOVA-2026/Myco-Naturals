@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiCheck, FiArrowRight, FiArrowLeft, FiCircle } from 'react-icons/fi';
+import VoiceAssistantPlayer from '../components/VoiceAssistantPlayer';
 
 const fade = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 const stagger = { show: { transition: { staggerChildren: 0.1 } } };
@@ -20,7 +21,8 @@ export default function Guide() {
       color: "from-blue-500 to-cyan-500",
       shadow: "shadow-blue-500/20",
       stepCount: 5,
-      finalKey: "stage1f"
+      finalKey: "stage1f",
+      image: "stage1.jpg"
     },
     {
       id: 2,
@@ -30,7 +32,8 @@ export default function Guide() {
       color: "from-teal-500 to-emerald-500",
       shadow: "shadow-teal-500/20",
       stepCount: 5,
-      finalKey: "stage2f"
+      finalKey: "stage2f",
+      image: "stage2.jpg"
     },
     {
       id: 3,
@@ -40,7 +43,8 @@ export default function Guide() {
       color: "from-orange-500 to-amber-500",
       shadow: "shadow-orange-500/20",
       stepCount: 6,
-      finalKey: "stage3f"
+      finalKey: "stage3f",
+      image: "stage3.jpg"
     }
   ];
 
@@ -58,6 +62,12 @@ export default function Guide() {
   const currentStage = STAGES[activeStage];
   const currentStepIndex = activeSteps[activeStage];
   const currentSteps = getStageSteps(activeStage);
+  
+  const currentStepTexts = currentSteps.map(step => {
+    const title = t(`guide.${step.titleKey}`);
+    const contents = t(`guide.${step.contentKey}`, { returnObjects: true }) || [];
+    return `${title}. ${contents.join('. ')}`;
+  });
   
   const isFinalStep = currentStepIndex === currentSteps.length;
 
@@ -94,6 +104,14 @@ export default function Guide() {
 
       <div className="flex-1 bg-navy-900/30">
         <div className="max-w-5xl mx-auto px-4 py-10">
+          
+          <div className="mb-8 text-center md:text-left">
+             <h2 className="text-3xl font-bold text-white mb-2 flex items-center justify-center md:justify-start gap-3">
+              <span className="text-3xl">📘</span> Cultivation Guides
+            </h2>
+            <p className="text-white/50 text-lg">Select a stage below to view its visual guide and detailed step sequence.</p>
+          </div>
+
           {/* Stage Selector */}
           <div className="grid md:grid-cols-3 gap-4 mb-12">
             {STAGES.map((stage, idx) => (
@@ -125,6 +143,31 @@ export default function Guide() {
               </button>
             ))}
           </div>
+
+          {/* Dynamic Image Container */}
+          <div className="mb-12 bg-navy-950/40 border border-white/5 rounded-2xl p-4 md:p-6 backdrop-blur-sm shadow-xl">
+            <AnimatePresence mode="wait">
+              <motion.img 
+                key={activeStage}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.4 }}
+                src={`${import.meta.env.BASE_URL}${currentStage.image}`} 
+                alt={t(`guide.${currentStage.titleKey}`)}
+                className="w-full h-auto object-contain rounded-xl border border-white/10 shadow-2xl bg-white/5 min-h-[200px]"
+                onError={(e) => { e.target.style.display = 'none'; }}
+                onLoad={(e) => { e.target.style.display = 'block'; }}
+              />
+            </AnimatePresence>
+          </div>
+
+          <VoiceAssistantPlayer 
+            steps={currentStepTexts}
+            currentStepIndex={currentStepIndex}
+            onStepChange={setStep}
+            isFinalStep={isFinalStep}
+          />
 
           {/* Content Area - Two Column Layout */}
           <div className="grid md:grid-cols-12 gap-8">
