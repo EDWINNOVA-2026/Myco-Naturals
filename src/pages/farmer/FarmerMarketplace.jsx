@@ -5,14 +5,14 @@ import { FiPackage, FiPlus, FiEye, FiEdit } from 'react-icons/fi';
 
 const mockProducts = [
   { id: 1, name: 'Dried Cordyceps Militaris', price: 15000, unit: '100g', stock: 50, orders: 12, status: 'active' },
-  { id: 2, name: 'Cordyceps Powder', price: 8000, unit: '50g', stock: 30, orders: 8, status: 'active' },
+  { id: 2, name: 'Immune booster', price: 8000, unit: '50g', stock: 30, orders: 8, status: 'active' },
   { id: 3, name: 'Cordyceps Extract Capsules', price: 2500, unit: '60 caps', stock: 100, orders: 25, status: 'active' },
   { id: 4, name: 'Fresh Cordyceps', price: 20000, unit: '100g', stock: 0, orders: 5, status: 'out_of_stock' },
 ];
 
 const mockOrders = [
   { id: 'ORD-001', product: 'Dried Cordyceps Militaris', qty: 2, total: 30000, buyer: 'Wellness Store, Chennai', status: 'completed', date: '2026-04-02' },
-  { id: 'ORD-002', product: 'Cordyceps Powder', qty: 5, total: 40000, buyer: 'Ayurvedic Center, Bangalore', status: 'shipped', date: '2026-04-03' },
+  { id: 'ORD-002', product: 'Immune booster', qty: 5, total: 40000, buyer: 'Ayurvedic Center, Bangalore', status: 'shipped', date: '2026-04-03' },
   { id: 'ORD-003', product: 'Cordyceps Extract Capsules', qty: 10, total: 25000, buyer: 'Health Store, Hyderabad', status: 'processing', date: '2026-04-04' },
 ];
 

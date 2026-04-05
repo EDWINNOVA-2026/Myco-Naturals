@@ -15,9 +15,9 @@ const PRODUCTS = [
 ];
 
 const DOSAGE = {
-  child:   { immunity: 'Mix ¼ tsp Cordyceps powder with warm milk once daily in the morning.', energy: 'Add ¼ tsp powder to smoothie or juice, 3–4 times a week.', wellness: 'Small daily intake of ¼ tsp with warm water or honey.', recovery: 'Mix ¼ tsp with water after physical activity.' },
-  adult:   { immunity: 'Take ½–1 tsp Cordyceps powder with warm water daily, preferably morning.', energy: 'Take 1 tsp powder or 2 capsules 30 min before exercise.', wellness: '½ tsp daily with warm water. Can mix with tea or coffee.', recovery: 'Take 1 tsp powder with protein shake after workouts for fast muscle repair.' },
-  elderly: { immunity: 'Take ¼–½ tsp Cordyceps powder with warm water daily. Start with smaller dose.', energy: 'Take ½ tsp powder with warm milk in the morning for sustained energy.', wellness: 'Small daily intake of ¼ tsp with warm water. Consult doctor if on medications.', recovery: 'Take ½ tsp with warm water in the evening for joint and muscle recovery.' },
+  child:   { immunity: 'Mix ¼ tsp Immune booster with warm milk once daily in the morning.', energy: 'Add ¼ tsp Immune booster to smoothie or juice, 3–4 times a week.', wellness: 'Small daily intake of ¼ tsp with warm water or honey.', recovery: 'Mix ¼ tsp with water after physical activity.' },
+  adult:   { immunity: 'Take ½–1 tsp Immune booster with warm water daily, preferably morning.', energy: 'Take 1 tsp Immune booster or 2 capsules 30 min before exercise.', wellness: '½ tsp daily with warm water. Can mix with tea or coffee.', recovery: 'Take 1 tsp Immune booster with protein shake after workouts for fast muscle repair.' },
+  elderly: { immunity: 'Take ¼–½ tsp Immune booster with warm water daily. Start with smaller dose.', energy: 'Take ½ tsp Immune booster with warm milk in the morning for sustained energy.', wellness: 'Small daily intake of ¼ tsp with warm water. Consult doctor if on medications.', recovery: 'Take ½ tsp with warm water in the evening for joint and muscle recovery.' },
 };
 
 export default function Marketplace() {
@@ -103,7 +103,7 @@ export default function Marketplace() {
 
         {totalCount > 0 && (
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex justify-center mt-10">
-            <Link to="/cart" className="btn-primary flex items-center gap-3 !px-8 !py-4 text-lg shadow-xl shadow-primary-500/20 group hover:scale-105 transition-all">
+            <Link to="/cart" state={{ cartState: cart }} className="btn-primary flex items-center gap-3 !px-8 !py-4 text-lg shadow-xl shadow-primary-500/20 group hover:scale-105 transition-all">
               <FiShoppingCart className="text-xl group-hover:-rotate-12 transition-transform" /> 
               Proceed to Checkout ({totalCount} items)
             </Link>

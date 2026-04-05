@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { FiArrowRight, FiZap, FiActivity, FiHeart, FiShield, FiTrendingUp, FiGrid, FiTarget, FiBook, FiBox, FiServer, FiBell, FiGlobe, FiEye, FiUsers, FiShoppingCart } from 'react-icons/fi';
 import { GiMushroom } from 'react-icons/gi';
 
@@ -9,8 +10,8 @@ const stagger = { show: { transition: { staggerChildren: 0.12 } } };
 
 export default function Home() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const guideRef = useRef(null);
-  const franchiseRef = useRef(null);
   const howItWorksRef = useRef(null);
 
   const scrollToSection = (ref) => {
@@ -44,7 +45,7 @@ export default function Home() {
 
           <motion.div variants={fade} className="flex flex-wrap gap-4 justify-center">
             <button onClick={() => scrollToSection(guideRef)} className="btn-primary text-base">{t('hero.cta1')} <FiArrowRight /></button>
-            <button onClick={() => scrollToSection(franchiseRef)} className="btn-outline text-base">{t('hero.cta2')}</button>
+            <button onClick={() => navigate('/franchise')} className="btn-outline text-base">{t('hero.cta2')}</button>
           </motion.div>
         </div>
       </section>
@@ -169,14 +170,13 @@ export default function Home() {
             <motion.h2 variants={fade} className="text-3xl md:text-4xl font-bold text-white mb-6">{t('about.title')}</motion.h2>
             <motion.p variants={fade} className="text-white/50 text-lg leading-relaxed">{t('about.text')}</motion.p>
             <motion.div variants={fade} className="mt-8">
-              <button onClick={() => scrollToSection(franchiseRef)} className="btn-primary">{t('hero.cta2')} <FiArrowRight /></button>
+              <button onClick={() => navigate('/franchise')} className="btn-primary">{t('hero.cta2')} <FiArrowRight /></button>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* ─── Franchise Anchor (Hidden) ─── */}
-      <div ref={franchiseRef} className="h-0" />
+      {/* Removed Franchise Anchor as it routes to new page */}
     </motion.div>
   );
 }

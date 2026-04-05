@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMenu, FiX, FiGlobe, FiChevronDown } from 'react-icons/fi';
+import { FiMenu, FiX, FiGlobe, FiChevronDown, FiUser, FiLogOut } from 'react-icons/fi';
 import { GiMushroom } from 'react-icons/gi';
+import { useAuth } from '../auth/AuthContext';
 
 const LANGS = [
   { code: 'en', label: 'English', display: 'EN' },
@@ -25,9 +26,19 @@ const NAV = [
 export default function Navbar() {
   const { t, i18n } = useTranslation();
   const { pathname } = useLocation();
+  const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const getFilteredNav = () => {
+    return NAV.filter(n => {
+      if (n.key === 'dashboard' || n.key === 'guide') return user?.role === 'farmer';
+      if (n.key === 'franchise') return user?.role !== 'farmer';
+      return true;
+    });
+  };
+  const currentNav = getFilteredNav();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -57,7 +68,7 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <div className="hidden lg:flex items-center gap-1">
-            {NAV.map(n => (
+            {currentNav.map(n => (
               <Link key={n.to} to={n.to}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${pathname === n.to ? 'text-primary-400 bg-primary-500/10' : 'text-white/60 hover:text-white hover:bg-white/5'}`}>
                 {t(`nav.${n.key}`)}
@@ -94,6 +105,26 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
 
+            {/* Auth Buttons */}
+            <div className="hidden sm:flex items-center gap-2">
+              {user ? (
+                <div className="flex items-center gap-2 border-l border-white/10 pl-3 ml-1">
+                    <div className="text-xs text-right mr-1">
+                        <div className="text-white font-bold">{user.name || user.email.split('@')[0]}</div>
+                        <div className="text-primary-400 text-[10px] uppercase tracking-wider">{user.role}</div>
+                    </div>
+                    <button onClick={logout} className="p-2 text-white/60 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition" title="Logout">
+                        <FiLogOut />
+                    </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 border-l border-white/10 pl-3 ml-1">
+                    <Link to="/login" className="px-4 py-2 text-sm text-white/70 hover:text-white transition">Log In</Link>
+                    <Link to="/signup" className="px-4 py-2 text-sm bg-primary-500/10 text-primary-400 border border-primary-500/20 hover:bg-primary-500/20 rounded-lg transition">Sign Up</Link>
+                </div>
+              )}
+            </div>
+
             {/* Mobile toggle */}
             <button className="lg:hidden p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition-all" onClick={() => setOpen(!open)}>
               {open ? <FiX className="text-xl" /> : <FiMenu className="text-xl" />}
@@ -108,7 +139,7 @@ export default function Navbar() {
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.2 }}
             className="lg:hidden bg-navy-950/95 backdrop-blur-xl border-t border-white/5 overflow-hidden">
             <div className="px-4 py-3 space-y-1">
-              {NAV.map(n => (
+              {currentNav.map(n => (
                 <Link key={n.to} to={n.to} onClick={() => setOpen(false)}
                   className={`block px-4 py-3 rounded-xl text-sm font-medium transition-all ${pathname === n.to ? 'text-primary-400 bg-primary-500/10' : 'text-white/60 hover:text-white hover:bg-white/5'}`}>
                   {t(`nav.${n.key}`)}
@@ -121,6 +152,19 @@ export default function Navbar() {
                     {l.display}
                   </button>
                 ))}
+              </div>
+              
+              <div className="pt-3 border-t border-white/5 mt-2">
+                {user ? (
+                   <button onClick={() => { logout(); setOpen(false); }} className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-400/10 rounded-xl transition flex items-center gap-2">
+                     <FiLogOut /> Logout ({user.name})
+                   </button>
+                ) : (
+                   <div className="flex flex-col gap-2">
+                       <Link to="/login" onClick={() => setOpen(false)} className="w-full px-4 py-2 text-center text-sm bg-white/5 rounded-lg text-white">Log In</Link>
+                       <Link to="/signup" onClick={() => setOpen(false)} className="w-full px-4 py-2 text-center text-sm bg-primary-500/20 text-primary-400 rounded-lg">Sign Up</Link>
+                   </div>
+                )}
               </div>
             </div>
           </motion.div>

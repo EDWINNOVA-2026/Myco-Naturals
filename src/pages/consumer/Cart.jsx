@@ -1,17 +1,32 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import { FiTrash2, FiMinus, FiPlus, FiShoppingBag, FiMapPin, FiPhone, FiUser } from 'react-icons/fi';
 
-const initialCart = [
-  { id: 1, name: 'Premium Dried Cordyceps', price: 15000, unit: '100g', qty: 1, image: '🍄' },
-  { id: 3, name: 'Cordyceps Capsules', price: 2500, unit: '60 caps', qty: 2, image: '💊' },
-  { id: 4, name: 'Cordyceps Tea Blend', price: 1800, unit: '30 bags', qty: 1, image: '🍵' },
-];
+const ALL_PRODUCTS = {
+  'p1': { id: 'p1', name: 'Premium Dried Cordyceps', price: 15000, unit: '100g', image: '🍄' },
+  'p2': { id: 'p2', name: 'Immune booster', price: 8000, unit: '100g', image: '🫙' },
+  'p3': { id: 'p3', name: 'Cordyceps Capsules', price: 2500, unit: '60 caps', image: '💊' },
+  'p4': { id: 'p4', name: 'Cordyceps Tea Blend', price: 1800, unit: '30 bags', image: '🍵' },
+};
 
 export default function Cart() {
   const { t } = useTranslation();
-  const [items, setItems] = useState(initialCart);
+  const location = useLocation();
+  
+  const [items, setItems] = useState(() => {
+    if (location.state?.cartState) {
+      const initialItems = [];
+      Object.entries(location.state.cartState).forEach(([key, qty]) => {
+          if (ALL_PRODUCTS[key] && qty > 0) {
+              initialItems.push({ ...ALL_PRODUCTS[key], qty });
+          }
+      });
+      return initialItems;
+    }
+    return [];
+  });
   const [ordered, setOrdered] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
   const [formData, setFormData] = useState({
@@ -57,7 +72,7 @@ export default function Cart() {
 
   if (ordered) {
     return (
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="glass-card p-12 text-center max-w-md mx-auto mt-12">
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="glass-card p-12 text-center max-w-md mx-auto mt-24">
         <div className="text-5xl mb-4">🎉</div>
         <h2 className="text-2xl font-bold text-white mb-2">Order Placed!</h2>
         <p className="text-white/40">Thank you for your order. You will receive a confirmation shortly.</p>
@@ -67,8 +82,8 @@ export default function Cart() {
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-white">{t('consumer.cart')}</h2>
+    <div className="pt-24 pb-16 space-y-6 max-w-6xl mx-auto px-4">
+      <h2 className="text-2xl font-bold text-white">{t('consumer.cart', 'Shopping Cart')}</h2>
 
       {items.length === 0 ? (
         <div className="glass-card p-12 text-center">

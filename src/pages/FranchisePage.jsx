@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiArrowRight, FiX, FiCheckCircle, FiStar } from 'react-icons/fi';
+import { FiArrowRight, FiX, FiCheckCircle, FiStar, FiClock, FiShield } from 'react-icons/fi';
+import { useAuth } from '../auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const fade = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 const stagger = { show: { transition: { staggerChildren: 0.1 } } };
@@ -9,8 +11,12 @@ const WHY_ICONS = ['🎓', '📦', '🛠️', '🤝'];
 
 export default function FranchisePage() {
   const { t } = useTranslation();
+  const { user, submitFranchiseApp, simulateApproval } = useAuth();
+  const navigate = useNavigate();
+  
   const [modal, setModal] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({ name: '', phone: '', city: '', budget: '' });
 
   const whys = Array.from({ length: 4 }, (_, i) => ({ icon: WHY_ICONS[i], title: t(`franchise.w${i + 1}`), desc: t(`franchise.w${i + 1}d`) }));
   const plans = [
@@ -19,13 +25,56 @@ export default function FranchisePage() {
     { key: 'plan3', popular: false },
   ];
 
+  const handleApplySubmit = (e) => {
+    e.preventDefault();
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    submitFranchiseApp(formData);
+    setSubmitted(true);
+  };
+
+  const openAppModal = () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    setModal(true);
+  };
+
   return (
     <motion.div initial="hidden" animate="show" className="pt-24 pb-16">
       {/* Header */}
-      <section className="section-pad bg-gradient-to-b from-navy-950 to-navy-900/60 text-center">
-        <motion.div variants={stagger} className="max-w-3xl mx-auto">
+      <section className="section-pad bg-gradient-to-b from-navy-950 to-navy-900/60 text-center relative overflow-hidden">
+        <motion.div variants={stagger} className="max-w-3xl mx-auto relative z-10">
           <motion.h1 variants={fade} className="text-3xl md:text-5xl font-bold gradient-text mb-4">{t('franchise.title')}</motion.h1>
-          <motion.p variants={fade} className="text-white/50 text-lg">{t('franchise.sub')}</motion.p>
+          <motion.p variants={fade} className="text-white/50 text-lg mb-8">{t('franchise.sub')}</motion.p>
+          
+          {user?.status === 'pending' && (
+            <motion.div variants={fade} className="bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-6 inline-block max-w-lg mb-8">
+              <div className="flex items-center justify-center gap-2 text-yellow-400 font-bold mb-2">
+                <FiClock /> Application Pending Review
+              </div>
+              <p className="text-white/60 text-sm mb-4">You have already submitted an application. Please wait for our team to contact you.</p>
+              <button onClick={() => { simulateApproval(); alert("Demo Mode: You are now an approved Farmer!"); navigate('/dashboard'); }} className="px-4 py-2 bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30 rounded-lg text-sm font-bold border border-yellow-500/30 transition shadow-lg shadow-yellow-500/10">
+                Simulate Approval (Demo)
+              </button>
+            </motion.div>
+          )}
+
+          {user?.status === 'approved' && (
+            <motion.div variants={fade} className="bg-primary-500/10 border border-primary-500/20 rounded-2xl p-6 inline-block max-w-lg mb-8">
+              <div className="flex items-center justify-center gap-2 text-primary-400 font-bold mb-2">
+                <FiShield /> Officially Approved Farmer
+              </div>
+              <p className="text-white/60 text-sm mb-4">Welcome to the ecosystem. Your franchise portal is fully unlocked.</p>
+              <button onClick={() => navigate('/dashboard')} className="btn-primary">
+                Open Dashboard <FiArrowRight />
+              </button>
+            </motion.div>
+          )}
+
         </motion.div>
       </section>
 
@@ -61,8 +110,12 @@ export default function FranchisePage() {
                 <h3 className="text-lg font-bold text-white mb-1">{t(`franchise.${p.key}`)}</h3>
                 <div className="text-3xl font-extrabold gradient-text mb-4">{t(`franchise.${p.key}p`)}</div>
                 <p className="text-white/40 text-sm mb-6">{t(`franchise.${p.key}d`)}</p>
-                <button onClick={() => setModal(true)} className={p.popular ? 'btn-primary w-full' : 'btn-outline w-full'}>
-                  {t('franchise.apply')} <FiArrowRight />
+                <button 
+                  onClick={openAppModal} 
+                  disabled={user?.role === 'farmer' || user?.status === 'pending'}
+                  className={`${p.popular ? 'btn-primary' : 'btn-outline'} w-full disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  {user?.role === 'farmer' ? 'Already Joined' : t('franchise.apply')} <FiArrowRight />
                 </button>
               </motion.div>
             ))}
@@ -78,8 +131,12 @@ export default function FranchisePage() {
           <div className="relative z-10">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready to Transform Your Future?</h2>
             <p className="text-white/60 mb-6">Start earning ₹1L–₹2L per kg with our complete support ecosystem.</p>
-            <button onClick={() => setModal(true)} className="bg-white text-navy-900 font-bold py-3.5 px-8 rounded-xl hover:bg-white/90 transition-all hover:scale-105 inline-flex items-center gap-2 cursor-pointer">
-              {t('franchise.apply')} <FiArrowRight />
+            <button 
+              onClick={openAppModal} 
+              disabled={user?.role === 'farmer' || user?.status === 'pending'}
+              className="bg-white text-navy-900 font-bold py-3.5 px-8 rounded-xl hover:bg-white/90 transition-all hover:scale-105 inline-flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed"
+            >
+              {user?.role === 'farmer' ? 'You Provide Results Already!' : t('franchise.apply')} <FiArrowRight />
             </button>
           </div>
         </div>
@@ -102,26 +159,29 @@ export default function FranchisePage() {
                     <FiCheckCircle className="text-primary-400 text-3xl" />
                   </div>
                   <h3 className="text-xl font-bold text-white mb-2">Application Submitted!</h3>
-                  <p className="text-white/40 text-sm">Our team will contact you within 48 hours.</p>
-                  <button onClick={() => { setModal(false); setSubmitted(false); }} className="btn-primary mt-6">Close</button>
+                  <p className="text-white/40 text-sm mb-6">Our team will contact you. Your status has been upgraded to Pending.</p>
+                  <button onClick={() => { setModal(false); setSubmitted(false); window.scrollTo({top: 0, behavior: 'smooth'}); }} className="btn-primary w-full">View Status</button>
                 </div>
               ) : (
                 <>
                   <h3 className="text-xl font-bold text-white mb-6">{t('franchise.formTitle')}</h3>
-                  <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }} className="space-y-4">
-                    <input type="text" placeholder={t('franchise.fname')} className="input-dark" required />
-                    <input type="tel" placeholder={t('franchise.phone')} className="input-dark" required />
-                    <input type="text" placeholder={t('franchise.city')} className="input-dark" required />
-                    <select className="input-dark" required defaultValue="">
-                      <option value="" disabled>{t('franchise.budget')}</option>
-                      <option>₹1L – ₹3L</option>
-                      <option>₹3L – ₹5L</option>
-                      <option>₹5L – ₹10L</option>
-                      <option>₹10L+</option>
+                  <form onSubmit={handleApplySubmit} className="space-y-4">
+                    <input type="text" placeholder={t('franchise.fname', 'Full Name')} className="input-dark" required 
+                      value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                    <input type="tel" placeholder={t('franchise.phone', 'Phone Number')} className="input-dark" required 
+                      value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
+                    <input type="text" placeholder={t('franchise.city', 'City & State')} className="input-dark" required 
+                      value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} />
+                    <select className="input-dark text-white/50" required value={formData.budget} onChange={e => setFormData({...formData, budget: e.target.value})}>
+                      <option value="" disabled>{t('franchise.budget', 'Select Budget Range')}</option>
+                      <option value="1">₹1L – ₹3L</option>
+                      <option value="3">₹3L – ₹5L</option>
+                      <option value="5">₹5L – ₹10L</option>
+                      <option value="10">₹10L+</option>
                     </select>
-                    <div className="flex gap-3 pt-2">
-                      <button type="button" onClick={() => setModal(false)} className="btn-outline flex-1 !py-2.5">{t('franchise.cancel')}</button>
-                      <button type="submit" className="btn-primary flex-1 !py-2.5">{t('franchise.submit')}</button>
+                    <div className="flex gap-3 pt-4 border-t border-white/5">
+                      <button type="button" onClick={() => setModal(false)} className="btn-outline flex-1 !py-3">{t('franchise.cancel')}</button>
+                      <button type="submit" className="btn-primary flex-1 !py-3">{t('franchise.submit')}</button>
                     </div>
                   </form>
                 </>

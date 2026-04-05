@@ -4,7 +4,7 @@ import { FiShoppingCart, FiStar, FiHeart, FiZap, FiShield, FiActivity } from 're
 
 const products = [
   { id: 1, name: 'Premium Dried Cordyceps', price: 15000, unit: '100g', rating: 4.8, reviews: 124, badge: 'Best Seller', image: '🍄' },
-  { id: 2, name: 'Cordyceps Powder', price: 8000, unit: '50g', rating: 4.6, reviews: 89, badge: 'Popular', image: '🫙' },
+  { id: 2, name: 'Immune booster', price: 8000, unit: '50g', rating: 4.6, reviews: 89, badge: 'Popular', image: '🫙' },
   { id: 3, name: 'Cordyceps Capsules', price: 2500, unit: '60 caps', rating: 4.7, reviews: 203, badge: 'Easy Use', image: '💊' },
   { id: 4, name: 'Cordyceps Tea Blend', price: 1800, unit: '30 bags', rating: 4.5, reviews: 67, badge: 'New', image: '🍵' },
   { id: 5, name: 'Cordyceps Tincture', price: 3500, unit: '30ml', rating: 4.9, reviews: 45, badge: 'Premium', image: '💧' },
