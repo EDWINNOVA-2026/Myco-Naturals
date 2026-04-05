@@ -19,7 +19,7 @@ export default function Guide() {
       icon: "🧫",
       color: "from-blue-500 to-cyan-500",
       shadow: "shadow-blue-500/20",
-      stepCount: 6,
+      stepCount: 5,
       finalKey: "stage1f"
     },
     {
@@ -29,7 +29,7 @@ export default function Guide() {
       icon: "💧",
       color: "from-teal-500 to-emerald-500",
       shadow: "shadow-teal-500/20",
-      stepCount: 7,
+      stepCount: 5,
       finalKey: "stage2f"
     },
     {
@@ -39,7 +39,7 @@ export default function Guide() {
       icon: "🌾",
       color: "from-orange-500 to-amber-500",
       shadow: "shadow-orange-500/20",
-      stepCount: 8,
+      stepCount: 6,
       finalKey: "stage3f"
     }
   ];

@@ -84,57 +84,113 @@
     "next": "Next Step",
     "done": "Done",
     "final": "Final Result",
-    "stage1": "PDA Medium",
-    "stage1p": "Develop pure and stable starter culture",
-    "s1step1": "Preparation of Nutrient Medium",
-    "s1step1c": ["Prepare a nutrient-rich base using potato extract, dextrose, and agar", "Ensure proper mixing for uniform gel-like consistency", "Pour into sterile containers before solidification"],
-    "s1step2": "Controlled Sterilization",
-    "s1step2c": ["Maintain hygienic conditions to eliminate contaminants", "Use controlled heat and pressure for purity", "Proper sealing prevents contamination"],
-    "s1step3": "Cooling & Stabilization",
-    "s1step3c": ["Cool gradually to room temperature", "Store at 10–15°C in controlled conditions", "Observe for contamination in first 3-5 days"],
-    "s1step4": "Inoculation",
-    "s1step4c": ["Introduce small, healthy culture sample at center", "Minimize external contamination exposure", "Maintain precision during culture transfer"],
-    "s1step5": "Incubation",
-    "s1step5c": ["Keep in dark environment", "Maintain temperature at 20–22°C", "Allow mycelial growth for ~20 days"],
-    "s1step6": "Light Induction",
-    "s1step6c": ["Introduce light exposure at later stage", "Observe color transformation: White → Yellow → Orange", "This triggers fruiting body initiation"],
-    "s1f": "Pure base culture ready for further multiplication",
-    "stage2": "Liquid Medium",
+    "stage1": "Base Culture",
+    "stage1p": "PDA Medium {Potato + Dextrose + Agar}",
+    "s1step1": "PDA MEDIUM",
+    "s1step1c": [
+      "{Potato + Dextrose + Agar}",
+      "[Medium has to be prepared as per the provide chart]"
+    ],
+    "s1step2": "STERILIZE",
+    "s1step2c": [
+      "After preparation of PDA Medium, distribute immediate in the Whisky Bottle {30 to 40 m.l} (or) Boiling Tube {10 to 15 m.l} Before it change to Solid form.",
+      "Cover with Absorbent Cotton and Cut or News Paper.",
+      "Keep in the Autoclave at 15 PSI / 121°C for 40 Minutes"
+    ],
+    "s1step3": "WAITING PERIOD",
+    "s1step3c": [
+      "After 40 minutes Sterilization take out the PDA Medium from the Autoclave.",
+      "Keep all the PDA Medium bottle in Slanting [10° to 15°] Position for 5 days.",
+      "Discard any Contaminated PDA Medium is seen during the waiting period 5 days"
+    ],
+    "s1step4": "ISOLATE & INOCULATE",
+    "s1step4c": [
+      "Cut a slice from the top of the well - grown Mother Mushroom and place it at Centre of the PDA Medium [ Whisky Bottle or Boiling tube, After 5 Days waiting Period ]",
+      "Temperature - 20° C to 22° C",
+      "Dried Mushroom - 20 % Success",
+      "Fresh Mushroom - 80 % Success"
+    ],
+    "s1step5": "INCUBATE",
+    "s1step5c": [
+      "Keep in Dark + 20 Days + Temperature 22°C",
+      "[ Dark - Cover with Black or Blue Thick Cloth ]",
+      "Remove the Cloth Cover before 2 days . ( 19th day )",
+      "Give diffused light on 19th day & 20th day.",
+      "Now the Culture changes from White to Yellow and Orange Colour."
+    ],
+    "s1f": "NOW THE BASE CULTURE IS READY",
+    "stage2": "Liquid Culture",
     "stage2p": "Rapid multiplication of fungal culture",
-    "s2step1": "Liquid Nutrient Preparation",
-    "s2step1c": ["Prepare using: Potato broth, Dextrose, Peptone, Yeast extract, Magnesium sulfate, Vitamins (B1, B12)", "Mix thoroughly to ensure uniform distribution", "Fill into sterile culture containers (flasks/bottles)"],
-    "s2step2": "Sterilization",
-    "s2step2c": ["Ensure complete elimination of contaminants", "Maintain controlled sterilization conditions", "Proper sealing is critical for success"],
-    "s2step3": "Cooling Phase",
-    "s2step3c": ["Allow medium to cool naturally to room temperature", "Maintain stability before inoculation", "Prevent external contamination"],
-    "s2step4": "Inoculation",
-    "s2step4c": ["Transfer small portion from PDA culture", "Ensure clean handling conditions throughout", "Place culture into liquid medium carefully"],
-    "s2step5": "Incubation",
-    "s2step5c": ["Maintain dark environment without light", "Temperature: 20–22°C consistently", "Duration: approximately 20 days"],
-    "s2step6": "Controlled Mixing",
-    "s2step6c": ["Perform periodic gentle shaking to distribute nutrients", "Ensures uniform growth of mycelium", "Avoid excessive disturbance after initial phase"],
-    "s2step7": "Light Exposure",
-    "s2step7c": ["Introduce light near the final stage (day 18-20)", "Observe color change: White → Yellow → Orange", "This accelerates fruiting preparation"],
-    "s2f": "Liquid spawn ready for large-scale cultivation",
+    "s2step1": "LIQUID MEDIUM",
+    "s2step1c": [
+      "[Medium has to prepared as per the provide chart]"
+    ],
+    "s2step2": "STERILIZE",
+    "s2step2c": [
+      "After preparation of Liquid Medium distribute in the Saline bottle (or) Conical Flask ( 250 to 300 m.l )",
+      "Cover with Non Absorbent Cotton and Paper",
+      "Keep in the Autoclave at 15 PSI / 121°C for 40 Minutes"
+    ],
+    "s2step3": "WAITING PERIOD",
+    "s2step3c": [
+      "After 40 minutes Sterilization take out the Liquid Medium from the Autoclave.",
+      "Keep all the Liquid Medium in Normal Position for cooling 1 day only (less than 24 Hrs)"
+    ],
+    "s2step4": "ISOLATE & INOCULATE",
+    "s2step4c": [
+      "( With 20 Days Old Base Culture )",
+      "Cut a 1 C.M Square Piece from the 20 days Old Solid Base Culture and put inside the Sterilized Liquid Medium",
+      "Temperature 20°C to 22°C"
+    ],
+    "s2step5": "INCUBATE",
+    "s2step5c": [
+      "Keep in Dark + 20 Days + Temperature 22°C",
+      "[Dark - Cover with Black (or) Blue Colour Thick Cloth]",
+      "{ If We need More Conidia - From 2nd day Onwards } Rotate the Saline Bottles 5 times Clockwise and 5 times Anti Clockwise [ Daily Morning and Evening for 5 days only, up to 6th Day ] Let Stand Static for the remaining 14 Days",
+      "If We don't need more Conidia - Let Stand Static all the days",
+      "Remove the Cloth Cover before 2 days (19th Day)",
+      "Give diffused light 19th & 20th day.",
+      "Now the Culture Changes from White to Yellow and then Orange Colour"
+    ],
+    "s2f": "NOW THE LIQUID (OR) COMMERCIAL SPAWN IS READY",
     "stage3": "Basal Medium",
     "stage3p": "Final mushroom production stage",
-    "s3step1": "Substrate Preparation",
-    "s3step1c": ["Use nutrient-rich substrate (brown rice preferred)", "Combine with basal nutrient solution in proper ratio", "Ensure thorough and uniform mixing"],
-    "s3step2": "Sterilization",
-    "s3step2c": ["Maintain contamination-free conditions", "Ensure proper sealing of containers", "Apply controlled sterilization process"],
-    "s3step3": "Cooling",
-    "s3step3c": ["Allow substrate to cool before inoculation", "Maintain stable conditions throughout cooling", "Prevent any external contamination"],
-    "s3step4": "Inoculation",
-    "s3step4c": ["Add liquid spawn into substrate evenly", "Ensure even distribution throughout", "Maintain clean handling standards"],
-    "s3step5": "Incubation",
-    "s3step5c": ["Keep in dark environment completely", "Temperature: maintain at ~22°C", "Duration: ~10 days for colonization phase"],
-    "s3step6": "Light & Stress Induction",
-    "s3step6c": ["Gradually introduce light exposure in stages", "Increase light intensity progressively", "Stimulates fruiting body development"],
-    "s3step7": "Environmental Control",
-    "s3step7c": ["Maintain temperature at ~22°C consistently", "Maintain humidity at 80–85% range", "Ensure proper air circulation"],
-    "s3step8": "Harvesting",
-    "s3step8c": ["Total growth period: 56–60 days from inoculation", "Harvest when fruiting bodies reach full maturity", "Morning harvesting is recommended"],
-    "s3f": "Fully developed Cordyceps militaris ready for harvest"
+    "s3step1": "BASAL MEDIUM",
+    "s3step1c": [
+      "[Medium has to be prepared as per the provide chart]"
+    ],
+    "s3step2": "SUBSTRATE",
+    "s3step2c": [
+      "Take 20 grams Brown Rice in Lug Jar (or) Glass Bottle and pour (mix) 32 m.l Basal Medium",
+      "[For 1 gram Rice 1.6 m.l Basal Medium is required]"
+    ],
+    "s3step3": "STERILIZE & WAITING PERIOD",
+    "s3step3c": [
+      "After preparation of the Lug Jar (or) Glass Bottle, cover the Lid Air hole with absorbent Cotton (or) Micropore tape",
+      "Keep in the Autoclave at 15 PSI 121°C for 40 minutes",
+      "After 40 minutes Sterilization take out the Lug Jar/ Bottle from the Auto clave.",
+      "Keep all the Bottle in Normal Position for cooling 1 day (less than 24 Hrs.)"
+    ],
+    "s3step4": "INOCULATE & INCUBATE",
+    "s3step4c": [
+      "Take Sterilize Lug Jar / Glass Bottle",
+      "Add (pour) 10 m.l to 15 m.l Liquid Spawn",
+      "Keep in Dark + Temperature 22°C + 10 Days",
+      "[Dark - Cover with Black / Blue Colour Thick Cloth]"
+    ],
+    "s3step5": "STRESS / SHOCK",
+    "s3step5c": [
+      "Remove the Cloth Cover over the Lug jar/ Glass Bottle on 11th day",
+      "Give 500 Lux diffused light from 11th day onwards",
+      "Give 700 Lux diffused light from 16th day onwards",
+      "from 21st day onwards up to 60th day Give 800 to 1000 Lux direct Light",
+      "Temperature 22°C + R.H 80 % to 85 %"
+    ],
+    "s3step6": "CROP HARVEST",
+    "s3step6c": [
+      "Harvest can be done between 56th Day to 60th Day"
+    ],
+    "s3f": "Harvesting phase complete"
   },
   "franchise": {
     "title": "Franchise Opportunity",

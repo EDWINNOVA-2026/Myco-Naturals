@@ -9,12 +9,13 @@ import Dashboard from './pages/Dashboard';
 import Marketplace from './pages/Marketplace';
 import Cart from './pages/consumer/Cart';
 import ScrollToTop from './components/ScrollToTop';
+import ChatBot from './components/ChatBot';
 
 export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col relative">
         <Navbar />
         <main className="flex-1">
           <AnimatePresence mode="wait">
@@ -29,6 +30,7 @@ export default function App() {
           </AnimatePresence>
         </main>
         <Footer />
+        <ChatBot />
       </div>
     </BrowserRouter>
   );
