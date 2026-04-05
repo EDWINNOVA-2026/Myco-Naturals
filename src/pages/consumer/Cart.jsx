@@ -5,10 +5,22 @@ import { useLocation } from 'react-router-dom';
 import { FiTrash2, FiMinus, FiPlus, FiShoppingBag, FiMapPin, FiPhone, FiUser } from 'react-icons/fi';
 
 const ALL_PRODUCTS = {
-  'p1': { id: 'p1', name: 'Premium Dried Cordyceps', price: 15000, unit: '100g', image: '🍄' },
-  'p2': { id: 'p2', name: 'Immune booster', price: 8000, unit: '100g', image: '🫙' },
-  'p3': { id: 'p3', name: 'Cordyceps Capsules', price: 2500, unit: '60 caps', image: '💊' },
-  'p4': { id: 'p4', name: 'Cordyceps Tea Blend', price: 1800, unit: '30 bags', image: '🍵' },
+  'p1_250': { id: 'p1_250', name: 'Premium Dried Cordyceps', price: 15000, unit: '250g (1/4 kg)', image: '🍄' },
+  'p1_500': { id: 'p1_500', name: 'Premium Dried Cordyceps', price: 30000, unit: '500g (1/2 kg)', image: '🍄' },
+  'p1_1000': { id: 'p1_1000', name: 'Premium Dried Cordyceps', price: 60000, unit: '1kg', image: '🍄' },
+  
+  'p2_100': { id: 'p2_100', name: 'Immune booster', price: 500, unit: '100g', image: '🫙' },
+  'p2_250': { id: 'p2_250', name: 'Immune booster', price: 1250, unit: '250g', image: '🫙' },
+  'p2_500': { id: 'p2_500', name: 'Immune booster', price: 2500, unit: '500g', image: '🫙' },
+  'p2_1000': { id: 'p2_1000', name: 'Immune booster', price: 5000, unit: '1kg', image: '🫙' },
+
+  'p3_30': { id: 'p3_30', name: 'Cordyceps Capsules', price: 500, unit: '30 caps', image: '💊' },
+  'p3_60': { id: 'p3_60', name: 'Cordyceps Capsules', price: 1000, unit: '60 caps', image: '💊' },
+  'p3_90': { id: 'p3_90', name: 'Cordyceps Capsules', price: 1500, unit: '90 caps', image: '💊' },
+
+  'p4_100': { id: 'p4_100', name: 'Cordyceps Tea Blend', price: 600, unit: '100g', image: '🍵' },
+  'p4_250': { id: 'p4_250', name: 'Cordyceps Tea Blend', price: 1500, unit: '250g', image: '🍵' },
+  'p4_500': { id: 'p4_500', name: 'Cordyceps Tea Blend', price: 3000, unit: '500g', image: '🍵' },
 };
 
 export default function Cart() {

@@ -8,10 +8,54 @@ const fade = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transiti
 const stagger = { show: { transition: { staggerChildren: 0.1 } } };
 
 const PRODUCTS = [
-  { key: 'p1', emoji: '🍄', badge: 'Best Seller', rating: 4.8 },
-  { key: 'p2', emoji: '🫙', badge: 'Popular', rating: 4.6 },
-  { key: 'p3', emoji: '💊', badge: 'Easy Use', rating: 4.7 },
-  { key: 'p4', emoji: '🍵', badge: 'New', rating: 4.5 },
+  { key: 'p1', emoji: '🍄', badge: 'Best Seller', rating: 4.8,
+    variants: [
+      { vkey: 'p1_250', size: '250g (1/4 kg)', price: 15000 },
+      { vkey: 'p1_500', size: '500g (1/2 kg)', price: 30000 },
+      { vkey: 'p1_1000', size: '1kg', price: 60000 }
+    ]
+  },
+  { key: 'p2', emoji: '🫙', badge: 'Popular', rating: 4.6,
+    variants: [
+      { vkey: 'p2_100', size: '100g', price: 500 },
+      { vkey: 'p2_250', size: '250g', price: 1250 },
+      { vkey: 'p2_500', size: '500g', price: 2500 },
+      { vkey: 'p2_1000', size: '1kg', price: 5000 }
+    ],
+    descExtra: [
+      "Cordyceps",
+      "⚡ Energy: Maltodextrin / Glucose, Jaggery",
+      "🫁 Stamina: Beetroot powder",
+      "🛡️ Immunity: Amla powder, Tulsi",
+      "🔋 Recovery: Ashwagandha",
+      "🧂 Electrolytes: Sodium, Potassium",
+      "🍋 Taste: Lemon/orange flavor, Honey powder / Stevia mix"
+    ]
+  },
+  { key: 'p3', emoji: '💊', badge: 'Easy Use', rating: 4.7,
+    variants: [
+      { vkey: 'p3_30', size: '30 capsules', price: 500 },
+      { vkey: 'p3_60', size: '60 capsules', price: 1000 },
+      { vkey: 'p3_90', size: '90 capsules', price: 1500 }
+    ]
+  },
+  { key: 'p4', emoji: '🍵', badge: 'New', rating: 4.5,
+    variants: [
+      { vkey: 'p4_100', size: '100g', price: 600 },
+      { vkey: 'p4_250', size: '250g', price: 1500 },
+      { vkey: 'p4_500', size: '500g', price: 3000 }
+    ],
+    descExtra: [
+      "1. Core: Dried Cordyceps militaris",
+      "2. Flavor Add-ons:",
+      "• Ginger: warmth & digestion",
+      "• Tulsi: stress relief",
+      "• Green/Black tea: caffeine boost",
+      "• Lemongrass: refreshing flavor",
+      "• Honey/Licorice: throat soothing",
+      "• Cinnamon: blood sugar support"
+    ]
+  },
 ];
 
 const DOSAGE = {
@@ -23,6 +67,12 @@ const DOSAGE = {
 export default function Marketplace() {
   const { t } = useTranslation();
   const [cart, setCart] = useState({});
+  const [selectedVariants, setSelectedVariants] = useState({
+    p1: 'p1_250',
+    p2: 'p2_100',
+    p3: 'p3_30',
+    p4: 'p4_100'
+  });
   const [age, setAge] = useState('');
   const [weight, setWeight] = useState('');
   const [purpose, setPurpose] = useState('');
@@ -75,30 +125,53 @@ export default function Marketplace() {
       <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger}
         className="max-w-6xl mx-auto px-4 mb-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {PRODUCTS.map((p, i) => (
-            <motion.div key={p.key} variants={fade} className="glass overflow-hidden card-interactive group">
-              <div className="p-6 pb-3">
+          {PRODUCTS.map((p, i) => {
+            const activeVkey = selectedVariants[p.key];
+            const activeVariant = p.variants.find(v => v.vkey === activeVkey);
+            return (
+            <motion.div key={p.key} variants={fade} className="glass overflow-hidden card-interactive group flex flex-col">
+              <div className="p-6 pb-2 flex-grow">
                 <div className="flex justify-between items-start mb-3">
                   <span className="text-4xl group-hover:scale-110 transition-transform inline-block">{p.emoji}</span>
                   <span className="text-[10px] px-2 py-0.5 rounded-lg bg-primary-500/15 text-primary-400 font-semibold">{p.badge}</span>
                 </div>
-                <h3 className="text-white font-bold text-sm mb-0.5">{t(`market.${p.key}`)}</h3>
-                <p className="text-white/30 text-xs mb-2">{t(`market.${p.key}d`)}</p>
-                <div className="flex items-center gap-1.5">
+                <h3 className="text-white font-bold text-lg mb-0.5">{t(`market.${p.key}`)}</h3>
+                <div className="flex items-center gap-1.5 mb-2">
                   <FiStar className="text-yellow-400 text-xs" style={{ fill: '#facc15' }} />
                   <span className="text-white/50 text-xs">{p.rating}</span>
                 </div>
+                
+                <select value={activeVkey} onChange={e => setSelectedVariants(prev => ({...prev, [p.key]: e.target.value}))}
+                  className="w-full bg-navy-950/50 border border-white/10 rounded-lg text-white/80 text-sm px-3 py-1.5 mb-3 focus:outline-none focus:border-primary-400/50">
+                  {p.variants.map(v => (
+                    <option key={v.vkey} value={v.vkey}>{v.size} - ₹{v.price.toLocaleString()}</option>
+                  ))}
+                </select>
+
+                <p className="text-white/30 text-xs mb-3 font-semibold">{t(`market.${p.key}d`)}</p>
+
+                {p.descExtra && (
+                  <div className="bg-white/5 rounded-lg p-3 mt-2 h-44 overflow-y-auto custom-scrollbar border border-white/5">
+                    <div className="text-[10px] uppercase font-bold text-primary-400/70 tracking-wider mb-2">Detailed Ingredients</div>
+                    <ul className="space-y-1">
+                      {p.descExtra.map((desc, idx) => (
+                        <li key={idx} className="text-[11px] text-white/50 flex gap-2"><span className="text-primary-500">•</span>{desc}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
-              <div className="px-6 pb-6 pt-2 flex items-center justify-between">
-                <div className="text-xl font-extrabold text-primary-400">{t(`market.${p.key}p`)}</div>
-                <button onClick={() => addToCart(p.key)}
-                  className="flex items-center gap-1.5 bg-primary-500/15 text-primary-400 text-xs font-semibold px-3.5 py-2 rounded-xl hover:bg-primary-500/25 transition-all cursor-pointer active:scale-95">
+              <div className="px-6 pb-6 pt-4 mt-auto flex items-center justify-between border-t border-white/5">
+                <div className="text-xl font-extrabold text-primary-400">₹{activeVariant.price.toLocaleString()}</div>
+                <button onClick={() => addToCart(activeVkey)}
+                  className="flex items-center gap-1.5 bg-primary-500/15 text-primary-400 text-xs font-semibold px-3.5 py-2.5 rounded-xl hover:bg-primary-500/25 transition-all cursor-pointer active:scale-95">
                   <FiShoppingCart className="text-sm" />
-                  {cart[p.key] ? `(${cart[p.key]})` : t('market.addCart')}
+                  {cart[activeVkey] ? `(${cart[activeVkey]})` : t('market.addCart')}
                 </button>
               </div>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
 
         {totalCount > 0 && (

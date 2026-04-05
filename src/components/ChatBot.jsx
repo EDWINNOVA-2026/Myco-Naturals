@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiMessageSquare, FiX, FiActivity, FiVolume2, FiSquare, FiPause, FiPlay, FiSettings } from 'react-icons/fi';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
-import { getBestAnswer } from '../utils/qaMatcher';
+import { askSmartAssistant } from '../utils/llmService';
 import { useVoice } from '../hooks/useVoice';
 
 const QUICK_ACTIONS = [
@@ -34,7 +34,7 @@ export default function ChatBot() {
     }
   }, [messages]);
 
-  const handleSendMessage = (userInput) => {
+  const handleSendMessage = async (userInput) => {
     if (!userInput.trim()) return;
 
     // Add user message
@@ -42,15 +42,16 @@ export default function ChatBot() {
     setMessages(prev => [...prev, userMsg]);
     setLoading(true);
 
-    // Simulate small completely offline delay
-    setTimeout(() => {
-      const aiResponse = getBestAnswer(userInput);
-      setMessages(prev => [...prev, { id: Date.now(), sender: 'ai', text: aiResponse }]);
+    try {
+      const aiResponseText = await askSmartAssistant(messages, userInput);
+      setMessages(prev => [...prev, { id: Date.now(), sender: 'ai', text: aiResponseText }]);
       setLoading(false);
       
       // Auto play the new message
-      play(aiResponse);
-    }, 400);
+      play(aiResponseText);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const handleReplayLast = () => {
