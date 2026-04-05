@@ -1,3 +1,10 @@
+<a href="<a href="https://EDWINNOVA-2026.github.io/Myco-Naturals/">
+  <button>🚀 View Live Site</button>
+</a>>
+  <button>🚀 View Live Site</button>
+</a>
+
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
