@@ -8,7 +8,8 @@ const fade = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transiti
 const stagger = { show: { transition: { staggerChildren: 0.1 } } };
 
 const PRODUCTS = [
-  { key: 'p1', emoji: '🍄', badge: 'Best Seller', rating: 4.8,
+  {
+    key: 'p1', emoji: '🍄', badge: 'Best Seller', rating: 4.8,
     variants: [
       { vkey: 'p1_250', size: '250g (1/4 kg)', price: 15000 },
       { vkey: 'p1_500', size: '500g (1/2 kg)', price: 30000 },
@@ -22,7 +23,8 @@ const PRODUCTS = [
       "📦 Storage: Keep dry for extensive commercial shelf-life"
     ]
   },
-  { key: 'p2', emoji: '🫙', badge: 'Popular', rating: 4.6,
+  {
+    key: 'p2', emoji: '🫙', badge: 'Popular', rating: 4.6,
     variants: [
       { vkey: 'p2_100', size: '100g', price: 500 },
       { vkey: 'p2_250', size: '250g', price: 1250 },
@@ -39,7 +41,8 @@ const PRODUCTS = [
       "🍋 Taste: Lemon/orange flavor, Honey powder / Stevia mix"
     ]
   },
-  { key: 'p3', emoji: '💊', badge: 'Easy Use', rating: 4.7,
+  {
+    key: 'p3', emoji: '💊', badge: 'Easy Use', rating: 4.7,
     variants: [
       { vkey: 'p3_30', size: '30 capsules', price: 500 },
       { vkey: 'p3_60', size: '60 capsules', price: 1000 },
@@ -53,7 +56,8 @@ const PRODUCTS = [
       "📅 Routine: Easy 1-to-1 substitute for standard daily dosing"
     ]
   },
-  { key: 'p4', emoji: '🍵', badge: 'New', rating: 4.5,
+  {
+    key: 'p4', emoji: '🍵', badge: 'New', rating: 4.5,
     variants: [
       { vkey: 'p4_1', size: '1 Sachet (3g)', price: 30 },
       { vkey: 'p4_10', size: '1 Packet (10 Sachets)', price: 300 }
@@ -73,8 +77,8 @@ const PRODUCTS = [
 ];
 
 const DOSAGE = {
-  child:   { immunity: 'Mix ¼ tsp Immune booster with warm milk once daily in the morning.', energy: 'Add ¼ tsp Immune booster to smoothie or juice, 3–4 times a week.', wellness: 'Small daily intake of ¼ tsp with warm water or honey.', recovery: 'Mix ¼ tsp with water after physical activity.' },
-  adult:   { immunity: 'Take ½–1 tsp Immune booster with warm water daily, preferably morning.', energy: 'Take 1 tsp Immune booster or 2 capsules 30 min before exercise.', wellness: '½ tsp daily with warm water. Can mix with tea or coffee.', recovery: 'Take 1 tsp Immune booster with protein shake after workouts for fast muscle repair.' },
+  child: { immunity: 'Mix ¼ tsp Immune booster with warm milk once daily in the morning.', energy: 'Add ¼ tsp Immune booster to smoothie or juice, 3–4 times a week.', wellness: 'Small daily intake of ¼ tsp with warm water or honey.', recovery: 'Mix ¼ tsp with water after physical activity.' },
+  adult: { immunity: 'Take ½–1 tsp Immune booster with warm water daily, preferably morning.', energy: 'Take 1 tsp Immune booster or 2 capsules 30 min before exercise.', wellness: '½ tsp daily with warm water. Can mix with tea or coffee.', recovery: 'Take 1 tsp Immune booster with protein shake after workouts for fast muscle repair.' },
   elderly: { immunity: 'Take ¼–½ tsp Immune booster with warm water daily. Start with smaller dose.', energy: 'Take ½ tsp Immune booster with warm milk in the morning for sustained energy.', wellness: 'Small daily intake of ¼ tsp with warm water. Consult doctor if on medications.', recovery: 'Take ½ tsp with warm water in the evening for joint and muscle recovery.' },
 };
 
@@ -87,13 +91,40 @@ export default function Marketplace() {
     p3: 'p3_30',
     p4: 'p4_10'
   });
+  const [quantities, setQuantities] = useState({
+    p1_250: 1, p1_500: 1, p1_1000: 1,
+    p2_100: 1, p2_250: 1, p2_500: 1, p2_1000: 1,
+    p3_30: 1, p3_60: 1, p3_90: 1,
+    p4_1: 1, p4_10: 1
+  });
   const [age, setAge] = useState('');
   const [weight, setWeight] = useState('');
   const [purpose, setPurpose] = useState('');
 
-  const addToCart = (key) => setCart(prev => ({ ...prev, [key]: (prev[key] || 0) + 1 }));
-  const totalCount = Object.values(cart).reduce((a, b) => a + b, 0);
-  
+  const updateQuantity = (vkey, delta) => {
+    setQuantities(prev => ({
+      ...prev,
+      [vkey]: Math.max(1, prev[vkey] + delta)
+    }));
+  };
+
+  // ✅ FIX: store qty AND unit price so Cart page never needs to re-lookup prices
+  const addToCart = (vkey, quantity, unitPrice) => {
+    const totalPrice = unitPrice * quantity;
+    console.log({ vkey, unitPrice, quantity, totalPrice }); // debug
+    setCart(prev => ({
+      ...prev,
+      [vkey]: {
+        qty: ((prev[vkey]?.qty) || 0) + quantity,
+        unitPrice,
+        totalPrice: ((prev[vkey]?.unitPrice) || unitPrice) * (((prev[vkey]?.qty) || 0) + quantity)
+      }
+    }));
+    setQuantities(prev => ({ ...prev, [vkey]: 1 }));
+  };
+
+  const totalCount = Object.values(cart).reduce((a, b) => a + (b.qty || 0), 0);
+
   const getDosageResult = () => {
     if (!age || !weight || !purpose) return null;
     let base = DOSAGE[age]?.[purpose];
@@ -142,48 +173,91 @@ export default function Marketplace() {
           {PRODUCTS.map((p, i) => {
             const activeVkey = selectedVariants[p.key];
             const activeVariant = p.variants.find(v => v.vkey === activeVkey);
+            const basePrice = activeVariant.price;          // unit price for selected variant
+            const quantity = quantities[activeVkey] || 1;
+            const totalPrice = basePrice * quantity;         // ✅ always basePrice × quantity
+
             return (
-            <motion.div key={p.key} variants={fade} className="glass overflow-hidden card-interactive group flex flex-col">
-              <div className="p-6 pb-2 flex-grow">
-                <div className="flex justify-between items-start mb-3">
-                  <span className="text-4xl group-hover:scale-110 transition-transform inline-block">{p.emoji}</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-lg bg-primary-500/15 text-primary-400 font-semibold">{p.badge}</span>
-                </div>
-                <h3 className="text-white font-bold text-lg mb-0.5">{t(`market.${p.key}`)}</h3>
-                <div className="flex items-center gap-1.5 mb-2">
-                  <FiStar className="text-yellow-400 text-xs" style={{ fill: '#facc15' }} />
-                  <span className="text-white/50 text-xs">{p.rating}</span>
-                </div>
-                
-                <select value={activeVkey} onChange={e => setSelectedVariants(prev => ({...prev, [p.key]: e.target.value}))}
-                  className="w-full bg-navy-950/50 border border-white/10 rounded-lg text-white/80 text-sm px-3 py-1.5 mb-3 focus:outline-none focus:border-primary-400/50">
-                  {p.variants.map(v => (
-                    <option key={v.vkey} value={v.vkey}>{v.size} - ₹{v.price.toLocaleString()}</option>
-                  ))}
-                </select>
-
-                <p className="text-white/30 text-xs mb-3 font-semibold">{t(`market.${p.key}d`)}</p>
-
-                {p.descExtra && (
-                  <div className="bg-white/5 rounded-lg p-3 mt-2 h-44 overflow-y-auto custom-scrollbar border border-white/5">
-                    <div className="text-[10px] uppercase font-bold text-primary-400/70 tracking-wider mb-2">Detailed Ingredients</div>
-                    <ul className="space-y-1">
-                      {p.descExtra.map((desc, idx) => (
-                        <li key={idx} className="text-[11px] text-white/50 flex gap-2"><span className="text-primary-500">•</span>{desc}</li>
-                      ))}
-                    </ul>
+              <motion.div key={p.key} variants={fade} className="glass overflow-hidden card-interactive group flex flex-col">
+                <div className="p-6 pb-2 flex-grow">
+                  <div className="flex justify-between items-start mb-3">
+                    <span className="text-4xl group-hover:scale-110 transition-transform inline-block">{p.emoji}</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-lg bg-primary-500/15 text-primary-400 font-semibold">{p.badge}</span>
                   </div>
-                )}
-              </div>
-              <div className="px-6 pb-6 pt-4 mt-auto flex items-center justify-between border-t border-white/5">
-                <div className="text-xl font-extrabold text-primary-400">₹{activeVariant.price.toLocaleString()}</div>
-                <button onClick={() => addToCart(activeVkey)}
-                  className="flex items-center gap-1.5 bg-primary-500/15 text-primary-400 text-xs font-semibold px-3.5 py-2.5 rounded-xl hover:bg-primary-500/25 transition-all cursor-pointer active:scale-95">
-                  <FiShoppingCart className="text-sm" />
-                  {cart[activeVkey] ? `(${cart[activeVkey]})` : t('market.addCart')}
-                </button>
-              </div>
-            </motion.div>
+                  <h3 className="text-white font-bold text-lg mb-0.5">{t(`market.${p.key}`)}</h3>
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <FiStar className="text-yellow-400 text-xs" style={{ fill: '#facc15' }} />
+                    <span className="text-white/50 text-xs">{p.rating}</span>
+                  </div>
+
+                  <select value={activeVkey} onChange={e => setSelectedVariants(prev => ({ ...prev, [p.key]: e.target.value }))}
+                    className="w-full bg-navy-950/50 border-2 border-primary-400/50 rounded-lg text-white/90 text-base px-4 py-2.5 mb-4 focus:outline-none focus:border-primary-400 font-semibold">
+                    {p.variants.map(v => (
+                      <option key={v.vkey} value={v.vkey} className="bg-navy-950">{v.size} - ₹{v.price}</option>
+                    ))}
+                  </select>
+
+                  {/* Unit Price Display */}
+                  <div className="mb-3 p-2 bg-white/5 rounded-lg border border-white/10">
+                    <div className="text-white/50 text-xs font-medium mb-1">Price per unit</div>
+                    <div className="text-primary-300 text-sm font-semibold">₹{activeVariant.price.toLocaleString()}</div>
+                  </div>
+
+                  {/* Quantity Controls */}
+                  <div className="mb-4 p-3 bg-primary-500/5 rounded-lg border border-primary-400/20">
+                    <div className="text-white/50 text-xs font-medium mb-2">Quantity</div>
+                    <div className="flex items-center justify-center gap-3">
+                      <motion.button
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => updateQuantity(activeVkey, -1)}
+                        disabled={quantity === 1}
+                        className="w-8 h-8 rounded-lg bg-red-500/20 text-red-300 font-bold hover:bg-red-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-lg">
+                        −
+                      </motion.button>
+                      <span className="text-white font-bold text-lg w-8 text-center">{quantity}</span>
+                      <motion.button
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => updateQuantity(activeVkey, 1)}
+                        className="w-8 h-8 rounded-lg bg-green-500/20 text-green-300 font-bold hover:bg-green-500/30 transition-all flex items-center justify-center text-lg">
+                        +
+                      </motion.button>
+                    </div>
+                  </div>
+
+                  <p className="text-white/30 text-xs mb-3 font-semibold">{t(`market.${p.key}d`)}</p>
+
+                  {p.descExtra && (
+                    <div className="bg-white/5 rounded-lg p-3 mt-2 h-44 overflow-y-auto custom-scrollbar border border-white/5">
+                      <div className="text-[10px] uppercase font-bold text-primary-400/70 tracking-wider mb-2">Detailed Ingredients</div>
+                      <ul className="space-y-1">
+                        {p.descExtra.map((desc, idx) => (
+                          <li key={idx} className="text-[11px] text-white/50 flex gap-2"><span className="text-primary-500">•</span>{desc}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                {/* Total Price & Add to Cart */}
+                <div className="px-6 pb-6 pt-4 mt-auto border-t border-white/5 space-y-3">
+                  <motion.div
+                    key={totalPrice}
+                    initial={{ scale: 0.95 }}
+                    animate={{ scale: 1 }}
+                    className="text-center">
+                    <div className="text-white/50 text-xs font-medium mb-1">Total Price</div>
+                    <div className="text-3xl font-black text-primary-400 bg-gradient-to-r from-primary-500/15 to-primary-500/5 px-4 py-3 rounded-xl border-2 border-primary-400/30 shadow-lg shadow-primary-500/10">
+                      ₹{totalPrice.toLocaleString()}
+                    </div>
+                  </motion.div>
+
+                  <button onClick={() => addToCart(activeVkey, quantity, basePrice)}
+                    className="w-full flex items-center justify-center gap-2 bg-primary-500/15 text-primary-400 text-sm font-semibold px-4 py-3 rounded-xl hover:bg-primary-500/25 transition-all cursor-pointer active:scale-95 border border-primary-400/20 hover:border-primary-400/50">
+                    <FiShoppingCart className="text-base" />
+                    Add {quantity} to Cart {cart[activeVkey]?.qty && `(${cart[activeVkey].qty} in cart)`}
+                  </button>
+                </div>
+              </motion.div>
             );
           })}
         </div>
@@ -191,8 +265,8 @@ export default function Marketplace() {
         {totalCount > 0 && (
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex justify-center mt-10">
             <Link to="/cart" state={{ cartState: cart }} className="btn-primary flex items-center gap-3 !px-8 !py-4 text-lg shadow-xl shadow-primary-500/20 group hover:scale-105 transition-all">
-              <FiShoppingCart className="text-xl group-hover:-rotate-12 transition-transform" /> 
-              Proceed to Checkout ({totalCount} items)
+              <FiShoppingCart className="text-xl group-hover:-rotate-12 transition-transform" />
+              Proceed to Checkout ({totalCount} {totalCount === 1 ? 'item' : 'items'})
             </Link>
           </motion.div>
         )}

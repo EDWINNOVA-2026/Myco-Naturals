@@ -29,10 +29,13 @@ export default function Cart() {
   const [items, setItems] = useState(() => {
     if (location.state?.cartState) {
       const initialItems = [];
-      Object.entries(location.state.cartState).forEach(([key, qty]) => {
-          if (ALL_PRODUCTS[key] && qty > 0) {
-              initialItems.push({ ...ALL_PRODUCTS[key], qty });
-          }
+      Object.entries(location.state.cartState).forEach(([key, val]) => {
+        // Support both new shape { qty, unitPrice } and legacy shape (plain number)
+        const qty = typeof val === 'object' ? val.qty : val;
+        const unitPrice = typeof val === 'object' ? val.unitPrice : (ALL_PRODUCTS[key]?.price ?? 0);
+        if (ALL_PRODUCTS[key] && qty > 0) {
+          initialItems.push({ ...ALL_PRODUCTS[key], qty, price: unitPrice });
+        }
       });
       return initialItems;
     }
@@ -87,7 +90,7 @@ export default function Cart() {
         <div className="text-5xl mb-4">🎉</div>
         <h2 className="text-2xl font-bold text-white mb-2">Order Placed!</h2>
         <p className="text-white/40">Thank you for your order. You will receive a confirmation shortly.</p>
-        <button onClick={() => { setItems(initialCart); setOrdered(false); }} className="btn-primary mt-6">Continue Shopping</button>
+        <button onClick={() => { setItems([]); setOrdered(false); }} className="btn-primary mt-6">Continue Shopping</button>
       </motion.div>
     );
   }
