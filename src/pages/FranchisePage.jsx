@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiArrowRight, FiX, FiCheckCircle, FiStar, FiClock, FiShield } from 'react-icons/fi';
+import { FiArrowRight, FiX, FiCheckCircle, FiStar, FiClock, FiShield, FiMapPin, FiCalendar, FiMessageCircle, FiPhone } from 'react-icons/fi';
 import { useAuth } from '../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { sendFranchiseApplicationEmail } from '../utils/emailService';
@@ -10,11 +10,22 @@ const fade = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transiti
 const stagger = { show: { transition: { staggerChildren: 0.1 } } };
 const WHY_ICONS = ['🎓', '📦', '🛠️', '🤝'];
 
+const TRAINING_HIGHLIGHTS = [
+  { icon: '📍', label: 'Training Mode', value: 'Offline (In-Person)', color: 'text-orange-400' },
+  { icon: '📅', label: 'Duration', value: '4 Days Intensive', color: 'text-blue-400' },
+  { icon: '💰', label: 'Training Fee', value: '₹7,000 Only', color: 'text-green-400' },
+  { icon: '🎓', label: 'Certificate', value: 'Completion Certificate', color: 'text-purple-400' },
+  { icon: '👥', label: 'Batch Size', value: 'Small Batches (Max 10)', color: 'text-yellow-400' },
+  { icon: '📱', label: 'Confirmation', value: 'WhatsApp Notification', color: 'text-primary-400' },
+];
+
 const SUPPORT_CARDS = [
   {
     icon: '📚',
     title: 'Complete Training',
-    description: '4-Day intensive hands-on cultivation program',
+    price: '₹7,000',
+    badge: 'OFFLINE • IN-PERSON',
+    description: '4-Day intensive hands-on offline cultivation program — ₹7,000 per participant',
     details: [
       '📖 DAY 1 - MARKET & BUSINESS FUNDAMENTALS',
       '• Overview of Cordyceps militaris species and characteristics',
@@ -190,6 +201,7 @@ export default function FranchisePage() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', city: '', budget: '' });
   const [selectedSupportCard, setSelectedSupportCard] = useState(null);
+  const [trainingModal, setTrainingModal] = useState(false);
 
   const whys = Array.from({ length: 4 }, (_, i) => ({ icon: WHY_ICONS[i], title: t(`franchise.w${i + 1}`), desc: t(`franchise.w${i + 1}d`) }));
   const plans = [
@@ -316,6 +328,108 @@ export default function FranchisePage() {
         </motion.div>
       </section>
 
+      {/* ===== TRAINING SECTION ===== */}
+      <section className="section-pad" id="training-section">
+        <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger} className="max-w-6xl mx-auto px-4">
+          <motion.div variants={fade} className="text-center mb-12">
+            <span className="inline-block bg-orange-500/20 border border-orange-500/30 text-orange-400 text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest">🏫 OFFLINE TRAINING PROGRAM</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">4-Day Cordyceps Cultivation Training</h2>
+            <p className="text-white/50 max-w-2xl mx-auto">Join our hands-on, in-person training program and master Cordyceps cultivation from scratch — guided by expert cultivators.</p>
+          </motion.div>
+
+          {/* Training Fee Banner */}
+          <motion.div variants={fade} className="bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-teal-500/10 border border-green-500/30 rounded-3xl p-8 mb-10 text-center relative overflow-hidden">
+            <div className="absolute inset-0 opacity-5" style={{backgroundImage: 'radial-gradient(circle at 30% 50%, #10b981 0%, transparent 60%), radial-gradient(circle at 70% 50%, #14b8a6 0%, transparent 60%)'}} />
+            <div className="relative z-10">
+              <p className="text-white/50 text-sm mb-2 uppercase tracking-widest">Complete 4-Day Training Fee</p>
+              <div className="text-6xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-300 mb-3">₹7,000</div>
+              <p className="text-white/60 text-sm mb-6">One-time payment • Includes all materials, study kits & certification</p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <button
+                  id="enroll-training-btn"
+                  onClick={() => setTrainingModal(true)}
+                  className="btn-primary flex items-center gap-2 !px-6 !py-3 text-sm"
+                >
+                  🎓 Enroll for Training
+                </button>
+                <button
+                  id="whatsapp-training-btn"
+                  onClick={() => window.open(`https://wa.me/919360370893?text=${encodeURIComponent('Hi! I am interested in the 4-Day Cordyceps Cultivation Training (₹7,000). Please share the schedule and batch details.')}`, '_blank')}
+                  className="btn-outline flex items-center gap-2 !px-6 !py-3 text-sm"
+                >
+                  💬 Ask on WhatsApp
+                </button>
+                <button
+                  id="call-training-btn"
+                  onClick={() => window.open('tel:+919360370893')}
+                  className="flex items-center gap-2 px-6 py-3 text-sm bg-blue-500/10 border border-blue-500/30 text-blue-400 rounded-xl hover:bg-blue-500/20 transition-all"
+                >
+                  📞 Call Us
+                </button>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Training Highlights Grid */}
+          <motion.div variants={stagger} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
+            {TRAINING_HIGHLIGHTS.map((h, i) => (
+              <motion.div key={i} variants={fade} className="glass p-4 rounded-2xl text-center border border-white/10 hover:border-primary-500/30 transition-all">
+                <div className="text-2xl mb-2">{h.icon}</div>
+                <p className="text-white/40 text-xs mb-1">{h.label}</p>
+                <p className={`font-bold text-sm ${h.color}`}>{h.value}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Day-wise Training Overview */}
+          <motion.div variants={fade} className="glass rounded-3xl p-8 mb-10 border border-white/10">
+            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">📋 Training Curriculum Overview</h3>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[
+                { day: 'Day 1', emoji: '📖', topic: 'Market & Business Fundamentals', desc: 'Market analysis, ROI projections, investment overview & business opportunity breakdown' },
+                { day: 'Day 2', emoji: '🔬', topic: 'PDA Lab-Level Culture Prep', desc: 'PDA preparation, sterilization, culture inoculation & contamination control (hands-on)' },
+                { day: 'Day 3', emoji: '🧪', topic: 'Liquid Culture Scaling', desc: 'Liquid media preparation, inoculation, temperature & pH management (hands-on)' },
+                { day: 'Day 4', emoji: '🌾', topic: 'Substrate & Fruiting Management', desc: 'Basal substrate prep, environmental control, harvesting & post-harvest processing' },
+              ].map((d, i) => (
+                <div key={i} className="bg-primary-500/5 border border-primary-500/20 rounded-2xl p-5 hover:border-primary-500/40 transition-all">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xs font-bold bg-primary-500/20 text-primary-400 px-2 py-0.5 rounded-full">{d.day}</span>
+                    <span className="text-xl">{d.emoji}</span>
+                  </div>
+                  <h4 className="text-white font-bold text-sm mb-2">{d.topic}</h4>
+                  <p className="text-white/50 text-xs leading-relaxed">{d.desc}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* CTA Buttons */}
+          <motion.div variants={fade} className="flex flex-wrap justify-center gap-4">
+            <button
+              id="register-training-cta"
+              onClick={() => setTrainingModal(true)}
+              className="btn-primary flex items-center gap-2 !px-8 !py-4 text-base shadow-xl shadow-primary-500/20 hover:scale-105 transition-all"
+            >
+              🎓 Register for ₹7,000 Training <FiArrowRight />
+            </button>
+            <button
+              id="view-schedule-btn"
+              onClick={() => setSelectedSupportCard(SUPPORT_CARDS[0])}
+              className="btn-outline flex items-center gap-2 !px-8 !py-4 text-base hover:scale-105 transition-all"
+            >
+              📅 View Full Schedule
+            </button>
+            <button
+              id="download-brochure-btn"
+              onClick={() => window.open(`https://wa.me/919360370893?text=${encodeURIComponent('Hi! Please send me the training brochure/syllabus for the Cordyceps Cultivation Training Program (₹7,000).')}`, '_blank')}
+              className="flex items-center gap-2 px-8 py-4 text-base bg-white/5 border border-white/10 text-white/70 rounded-xl hover:bg-white/10 hover:text-white transition-all"
+            >
+              📄 Get Brochure on WhatsApp
+            </button>
+          </motion.div>
+        </motion.div>
+      </section>
+
       {/* Franchise Opportunity - 4 Support Services */}
       <section className="section-pad bg-navy-900/40 border-y border-white/5">
         <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger} className="max-w-6xl mx-auto px-4">
@@ -327,9 +441,19 @@ export default function FranchisePage() {
             {SUPPORT_CARDS.map((card, i) => (
               <motion.div key={i} variants={fade}
                 onClick={() => setSelectedSupportCard(card)}
-                className="glass p-6 card-interactive cursor-pointer hover:border-primary-500/50 border border-white/10 transition-all rounded-2xl group">
+                className="glass p-6 card-interactive cursor-pointer hover:border-primary-500/50 border border-white/10 transition-all rounded-2xl group relative">
+                {card.price && (
+                  <div className="absolute -top-3 right-4">
+                    <span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-extrabold px-3 py-1 rounded-full shadow-lg shadow-green-500/30">{card.price}</span>
+                  </div>
+                )}
+                {card.badge && (
+                  <div className="mb-2">
+                    <span className="text-xs font-bold text-orange-400 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full">{card.badge}</span>
+                  </div>
+                )}
                 <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">{card.icon}</div>
-                <h3 className="text-lg font-bold text-white mb-2 h-14">{card.title}</h3>
+                <h3 className="text-lg font-bold text-white mb-2">{card.title}</h3>
                 <p className="text-white/60 text-sm mb-4 leading-relaxed line-clamp-2">{card.description}</p>
                 <button className="btn-primary text-xs py-2 w-full font-medium group-hover:shadow-lg group-hover:shadow-primary-500/30 transition-all" onClick={(e) => { e.stopPropagation(); setSelectedSupportCard(card); }}>
                   View Details →
@@ -391,15 +515,19 @@ export default function FranchisePage() {
                     <FiCheckCircle className="text-primary-400 text-3xl" />
                   </div>
                   <h3 className="text-xl font-bold text-white mb-2">✅ Application Submitted!</h3>
-                  <p className="text-white/40 text-sm mb-4">Email notification sent to <span className="text-primary-400 font-semibold">thedarvin93@gmail.com</span></p>
-                  <p className="text-white/40 text-xs mb-6 leading-relaxed">Our team will review your application and contact you within 2-3 business days via phone or email.</p>
+                  <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4 mb-4">
+                    <p className="text-green-400 font-semibold text-sm mb-1">📱 WhatsApp Notification Sent!</p>
+                    <p className="text-white/50 text-xs">Your credentials have been sent to our WhatsApp: <span className="text-primary-400 font-bold">+91 93603 70893</span></p>
+                  </div>
+                  <p className="text-white/40 text-xs mb-6 leading-relaxed">Our team will review your application and contact you within 2-3 business days via phone or WhatsApp.</p>
                   <div className="bg-white/5 border border-white/10 rounded-lg p-3 mb-6 text-left">
                     <p className="text-white/60 text-xs"><strong>Next Steps:</strong></p>
                     <ul className="text-white/40 text-xs mt-2 space-y-1">
-                      <li>✓ We will verify your details</li>
+                      <li>✓ We will verify your details via WhatsApp</li>
                       <li>✓ Schedule a consultation call</li>
                       <li>✓ Approve your franchise application</li>
                       <li>✓ Grant you access to the dashboard</li>
+                      <li>✓ Training fee: <span className="text-green-400 font-bold">₹7,000</span> (offline classes)</li>
                     </ul>
                   </div>
                   <button onClick={() => { setModal(false); setSubmitted(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="btn-primary w-full">View Status</button>
@@ -499,7 +627,77 @@ export default function FranchisePage() {
 
               <div className="flex gap-3 pt-4 border-t border-white/5">
                 <button onClick={() => setSelectedSupportCard(null)} className="btn-outline flex-1 !py-3">Close</button>
-                <button onClick={() => { setSelectedSupportCard(null); openAppModal(); }} className="btn-primary flex-1 !py-3">Enroll Now</button>
+                <button onClick={() => { setSelectedSupportCard(null); openAppModal(); }} className="btn-primary flex-1 !py-3">Apply Now</button>
+              </div>
+              {selectedSupportCard?.title === 'Complete Training' && (
+                <div className="mt-3 flex gap-3">
+                  <button
+                    onClick={() => { setSelectedSupportCard(null); setTrainingModal(true); }}
+                    className="w-full py-3 bg-green-500/10 border border-green-500/30 text-green-400 rounded-xl text-sm font-semibold hover:bg-green-500/20 transition-all"
+                  >
+                    🎓 Enroll for ₹7,000 Training
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Training Enrollment Modal */}
+      <AnimatePresence>
+        {trainingModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setTrainingModal(false)} />
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative glass-strong p-8 w-full max-w-md z-10 rounded-2xl">
+              <button onClick={() => setTrainingModal(false)} className="absolute top-4 right-4 text-white/30 hover:text-white transition-colors cursor-pointer">
+                <FiX className="text-xl" />
+              </button>
+              <div className="text-center mb-6">
+                <div className="text-5xl mb-3">🎓</div>
+                <h3 className="text-2xl font-bold text-white mb-1">Training Enrollment</h3>
+                <div className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-300 mb-1">₹7,000</div>
+                <p className="text-white/40 text-xs">4-Day Offline Training • In-Person Classes</p>
+              </div>
+
+              <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4 mb-6">
+                <p className="text-orange-400 font-semibold text-sm mb-2">🏫 Offline Training Details</p>
+                <ul className="text-white/60 text-xs space-y-1.5">
+                  <li>📍 In-Person classes at our Training Center</li>
+                  <li>📅 4 Days intensive hands-on program</li>
+                  <li>👥 Small batch (Max 10 participants)</li>
+                  <li>🧪 Hands-on lab sessions every day</li>
+                  <li>🎓 Certificate of Completion provided</li>
+                  <li>📱 Your details sent to admin via WhatsApp</li>
+                </ul>
+              </div>
+
+              <div className="space-y-3">
+                <button
+                  id="training-whatsapp-enroll-btn"
+                  onClick={() => {
+                    window.open(`https://wa.me/919360370893?text=${encodeURIComponent('Hi! I want to enroll in the 4-Day Cordyceps Cultivation Training.\n\nName: [Your Name]\nPhone: [Your Phone]\nCity: [Your City]\n\nTraining Fee: ₹7,000\nMode: Offline (In-Person)\n\nPlease confirm next batch dates.')}`, '_blank');
+                    setTrainingModal(false);
+                  }}
+                  className="btn-primary w-full py-3 flex items-center justify-center gap-2"
+                >
+                  💬 Enroll via WhatsApp
+                </button>
+                <button
+                  id="training-call-enroll-btn"
+                  onClick={() => window.open('tel:+919360370893')}
+                  className="w-full py-3 bg-blue-500/10 border border-blue-500/30 text-blue-400 rounded-xl text-sm font-semibold hover:bg-blue-500/20 transition-all flex items-center justify-center gap-2"
+                >
+                  📞 Call to Enroll: +91 93603 70893
+                </button>
+                <button
+                  id="training-franchise-apply-btn"
+                  onClick={() => { setTrainingModal(false); openAppModal(); }}
+                  className="w-full py-3 bg-white/5 border border-white/10 text-white/60 rounded-xl text-sm hover:bg-white/10 transition-all"
+                >
+                  🤝 Apply for Full Franchise Instead
+                </button>
               </div>
             </motion.div>
           </div>

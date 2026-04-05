@@ -17,6 +17,22 @@ export default function Footer() {
           <div className="text-center">
             <p className="text-white/30 text-sm">{t('footer.copy')}</p>
             <p className="text-white/15 text-xs mt-1">{t('footer.tag')}</p>
+            <div className="flex items-center justify-center gap-4 mt-3">
+              <a
+                href="tel:+919360370893"
+                className="flex items-center gap-1.5 text-white/40 hover:text-white/80 transition-colors text-xs"
+              >
+                📞 +91 93603 70893
+              </a>
+              <a
+                href="https://wa.me/919360370893"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-green-400/50 hover:text-green-400 transition-colors text-xs"
+              >
+                💬 WhatsApp
+              </a>
+            </div>
           </div>
           <div className="flex gap-4 text-white/25 text-xs">
             <Link to="/guide" className="hover:text-white/50 transition-colors">{t('nav.guide')}</Link>
