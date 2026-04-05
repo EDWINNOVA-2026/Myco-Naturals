@@ -5,13 +5,4 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   base: '/Myco-Naturals/',
   plugins: [react(), tailwindcss()],
-  server: {
-    port: 5173,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-      },
-    },
-  },
 })
